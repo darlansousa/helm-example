@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-api-deployment
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-api
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-api
+    spec:
+      containers:
+        - image:  {{ .Values.api.image }}
+          name:  api
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          env:
+            - name:  Mongo__User
+              value:  {{ .Values.mongodb.user }}
+            - name:  Mongo__Password
+              value:  {{ .Values.mongodb.password }}
+            - name:  Mongo__Host
+              value:  {{ .Release.Name }}-mongo-service          
+            - name:  Mongo__Database
+              value: admin     
